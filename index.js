@@ -9,15 +9,19 @@ const fetchData = async (searchTerm) => {
 };
 
 const input = document.querySelector("input");
-
-let timeoutId;
-const onInput = event => {
-    if(timeoutId) {                // see if it's defined
-        clearTimeout(timeoutId);
+const debounce = (callback, delay = 1000) => {
+    let timeoutId;
+    return (...arguments) => {
+        if(timeoutId) {
+            clearTimeout(timeoutId);
+        }
+        timeoutId = setTimeout(() => {
+            callback.apply(null, arguments); // apply detects automatically how many arguments are neccessary
+        }, delay);
     };
-    timeoutId = setTimeout(() => {
-        fetchData(event.target.value);
-    }, 500); // miliseconds are easily adjustable
 };
 
-input.addEventListener("input", onInput);
+const onInput = event => {
+        fetchData(event.target.value);
+};
+input.addEventListener("input", debounce(onInput, 700));
