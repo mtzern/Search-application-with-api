@@ -9,6 +9,15 @@ const fetchData = async (searchTerm) => {
 };
 
 const input = document.querySelector("input");
-input.addEventListener("input", (event) => { //input event listener gives a chance to see every time user change a text.
-    fetchData(event.target.value); // gives access to changed text
-});
+
+let timeoutId;
+const onInput = event => {
+    if(timeoutId) {                // see if it's defined
+        clearTimeout(timeoutId);
+    };
+    timeoutId = setTimeout(() => {
+        fetchData(event.target.value);
+    }, 500); // miliseconds are easily adjustable
+};
+
+input.addEventListener("input", onInput);
